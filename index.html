@@ -39,6 +39,9 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   direction: rtl;
+      max-width: 450px;
+    margin: 0 auto;
+    padding: 10px;
 }
 
 /* === STARS BG === */
@@ -71,13 +74,12 @@ body::after {
   z-index: 2;
   max-width: 480px;
   margin: 0 auto;
-  padding: 24px 16px 80px;
+  padding: 24px 16px;
 }
 
 /* === HEADER === */
 .header {
   text-align: center;
-  margin-bottom: 28px;
   position: relative;
 }
 
@@ -117,6 +119,42 @@ body::after {
   font-size: 14px;
   color: var(--text3);
   letter-spacing: 2px;
+}
+
+/* === TODAY DATE PILL === */
+.today-date-pill {
+  width: fit-content;
+  margin: 14px auto 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255,215,0,0.2);
+  background: linear-gradient(145deg, var(--bg3), var(--army));
+  padding: 10px 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.today-date-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 15px;
+  flex-wrap: wrap;
+}
+
+.today-date-label {
+  color: var(--text2);
+}
+
+.today-date-day {
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--gold), #fff5a0, var(--gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.today-date-full {
+  color: var(--text3);
 }
 
 /* === MAIN CARD === */
@@ -741,6 +779,15 @@ body::after {
     <div class="header-sub" id="rankBadge">🎖️ جندي بائس 🎖️</div>
   </div>
 
+  <!-- TODAY DATE PILL -->
+  <div class="today-date-pill">
+    <div class="today-date-inner">
+      <span class="today-date-label">📅 اليوم:</span>
+      <span class="today-date-day" id="todayDayName">--</span>
+      <span class="today-date-full">( <span id="todayFullDate">--</span> )</span>
+    </div>
+  </div>
+
   </div>
 
   <!-- MAIN DAYS CARD -->
@@ -1159,8 +1206,20 @@ function arabicDate() {
   return new Date().toLocaleDateString('ar-EG', opts);
 }
 
+// ======== TODAY DATE PILL ========
+function updateTodayDatePill() {
+  const now = new Date();
+  const dayName = now.toLocaleDateString('ar-EG', {weekday:'long'});
+  const fullDate = now.toLocaleDateString('ar-EG', {year:'numeric', month:'long', day:'numeric'});
+  const dayEl = document.getElementById('todayDayName');
+  const fullEl = document.getElementById('todayFullDate');
+  if (dayEl) dayEl.textContent = dayName;
+  if (fullEl) fullEl.textContent = fullDate;
+}
+
 // ======== UPDATE UI ========
 function update() {
+  updateTodayDatePill();
   const s = calcStats();
 
   if (s.remainDays <= 0) {
